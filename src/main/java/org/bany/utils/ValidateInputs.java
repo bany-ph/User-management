@@ -7,12 +7,12 @@ public class ValidateInputs {
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\\\.[A-Za-z]{2,})$");
     private static final int MIN_PASSWORD_LENGTH = 6;
 
-    public static void validateEmail(String email){
+    public static String validateEmail(String email){
 
         if(email == null || email.trim().isEmpty()) throw new IllegalArgumentException("The email cannot be empty");
 
         if(!EMAIL_REGEX.matcher(email).matches()) throw new IllegalArgumentException("Invalid email format");
-
+        return email; 
     }
 
     public static void validatePassword(String password){

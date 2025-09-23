@@ -59,11 +59,14 @@ public class UserService implements UserInterface {
 
 
     /*FOR ADMIN*/
-    public void changeStatusOfAnClient(User user){
+    public void changeStatusOfAnClient(String userEmail){
+        User user = getUserByEmail(userEmail);
         if(!isAdmin()){
             throw new RuntimeException("You're not allowed to do this action");
         }else if(user instanceof Administrador){
             throw new RuntimeException("You're not allow to do this action");
+        } else if (user == null) {
+            throw new NoSuchElementException("The user does not exist");
         }
         users.get(getIndexOfUser(user)).setStatus();
     }
