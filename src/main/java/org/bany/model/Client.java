@@ -8,9 +8,8 @@ public class Client extends User {
         this.address = address;
         this.phone = phone;
     }
-    public Client(String name, String email, String password, String address) {
+    public Client(String name, String email, String password) {
         super(name, email, password);
-        this.address = address;
     }
 
     public String getAddress() {
@@ -31,7 +30,7 @@ public class Client extends User {
 
     @Override
     public String getRole() {
-        return "Role → Client";
+        return "CLIENT";
     }
 
     @Override

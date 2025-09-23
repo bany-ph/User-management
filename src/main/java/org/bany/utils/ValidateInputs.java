@@ -4,21 +4,25 @@ import java.util.regex.Pattern;
 
 public class ValidateInputs {
 
-    public String validateEmail(String email){
-        Pattern emailRegex = Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@\"\n"
-                + "[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$");
+    private static final Pattern EMAIL_REGEX = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\\\.[A-Za-z]{2,})$");
+    private static final int MIN_PASSWORD_LENGTH = 6;
 
-        if(emailRegex.matcher(email).matches()){
-            throw new RuntimeException("Invalid Email");
-        }
-        return email;
+    public static void validateEmail(String email){
+
+        if(email == null || email.trim().isEmpty()) throw new IllegalArgumentException("The email cannot be empty");
+
+        if(!EMAIL_REGEX.matcher(email).matches()) throw new IllegalArgumentException("Invalid email format");
+
+
     }
 
-    public String validatePassword(String password){
-        byte passwordMinLong = 6;
-        if(password.length() < passwordMinLong){
-            throw new RuntimeException("The password has to be larger than 5");
+    public static void validatePassword(String password){
+        if (password == null || password.trim().isEmpty()){
+            throw new IllegalArgumentException("The password cannot be empty");
         }
-        return  password;
+
+        if(password.length() < MIN_PASSWORD_LENGTH){
+            throw new IllegalArgumentException("The password has to be larger than 5");
+        }
     }
 }

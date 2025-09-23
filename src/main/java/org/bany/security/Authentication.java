@@ -1,6 +1,11 @@
 package org.bany.security;
 
+import org.bany.model.User;
+
 public interface Authentication {
-    void login(String email, String password);
-    void register(String email, String password, String name);
+    boolean login(String email, String password);
+    boolean register(User user);
+    void logout();
+    User getCurrentUser();
+
 }

@@ -1,6 +1,7 @@
 package org.bany.model;
 
-import jdk.jshell.Snippet;
+
+import org.bany.utils.ValidateInputs;
 
 public abstract class User {
     private String name;
@@ -30,7 +31,7 @@ public abstract class User {
     }
 
     public void setEmail(String email) {
-
+        ValidateInputs.validateEmail(email);
         this.email = email;
     }
 
@@ -39,6 +40,7 @@ public abstract class User {
     }
 
     public void setPassword(String password) {
+        ValidateInputs.validatePassword(password);
         this.password = password;
     }
     public void setStatus(Status status){
