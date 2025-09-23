@@ -13,7 +13,6 @@ public class ValidateInputs {
 
         if(!EMAIL_REGEX.matcher(email).matches()) throw new IllegalArgumentException("Invalid email format");
 
-
     }
 
     public static void validatePassword(String password){
@@ -24,5 +23,22 @@ public class ValidateInputs {
         if(password.length() < MIN_PASSWORD_LENGTH){
             throw new IllegalArgumentException("The password has to be larger than 5");
         }
+    }
+
+
+    public static String validateString(String str, boolean ALLOW_EMPTY){
+        try {
+            if(!ALLOW_EMPTY && str.trim().isEmpty()){
+                throw new IllegalArgumentException("Empty input it's not allowed ");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return str.trim();
+    }
+
+
+    public static String validateString(String str){
+       return validateString(str,false);
     }
 }

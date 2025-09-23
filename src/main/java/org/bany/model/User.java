@@ -7,15 +7,13 @@ public abstract class User {
     private String name;
     private String email;
     private String password;
-    private enum Status {
-        ACTIVE,
-        BLOCKED
-    };
+    private boolean isActive;
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.isActive = true;
     }
 
     public String getName() {
@@ -43,9 +41,13 @@ public abstract class User {
         ValidateInputs.validatePassword(password);
         this.password = password;
     }
-    public void setStatus(Status status){
-
+    public void setStatus(){
+        this.isActive = !this.isActive;
     }
+    public boolean getStatus(){
+        return this.isActive;
+    }
+
 
     public abstract String getRole();
     public abstract String showProfile();

@@ -9,23 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AuthService implements Authentication {
-    private User currentUser;
 
-    private  AdminService adminService;
-    private  ClientService clientService;
+    private static User currentUser;
+    private final UserService userService;
+
     private boolean isAuth;
 
     public AuthService(){
-        this.adminService = new AdminService();
-        this.clientService = new ClientService();
-        this.currentUser = null;
+        userService = new UserService();
+        currentUser = null;
         this.isAuth = false;
     }
 
     @Override
     public boolean login(String email, String password) {
 
-        User getUser = FindElements.findByString(getAllUsers(),email,User::getEmail);
+        User getUser = FindElements.findByString(userService.listAllUsers(),email,User::getEmail);
         if(getUser == null){
             throw new RuntimeException("The User does not exist!");
         }
@@ -34,7 +33,7 @@ public class AuthService implements Authentication {
         }
 
         this.isAuth = true;
-        this.currentUser = getUser;
+        currentUser = getUser;
 
         return true;
     }
@@ -44,22 +43,19 @@ public class AuthService implements Authentication {
         ValidateInputs.validateEmail(newUser.getEmail());
         ValidateInputs.validatePassword(newUser.getPassword());
 
-        User userExist = FindElements.findByString(getAllUsers(),newUser.getEmail(), User::getEmail);
+        User userExist = FindElements.findByString(userService.listAllUsers(),newUser.getEmail(), User::getEmail);
+
         if(userExist != null){
             throw new RuntimeException("The User already exist");
         }
-        if(newUser.getRole().equalsIgnoreCase("ADMIN")){
-            adminService.save(newUser);
-        }else{
-            clientService.save(newUser);
-        }
+        userService.save(newUser);
         return true;
     }
 
     @Override
     public void logout() {
         if(isAuth && currentUser != null ){
-            this.currentUser = null;
+            currentUser = null;
             isAuth = false;
         }else {
             throw new RuntimeException("System Error: logout failed");
@@ -71,24 +67,13 @@ public class AuthService implements Authentication {
         return currentUser;
     }
 
-    public AdminService getAdminService() {
-        return adminService;
-    }
-
-    public ClientService getClientService() {
-        return clientService;
+    public UserService getUserService() {
+        return userService;
     }
 
     public boolean isAuth() {
         return isAuth;
     }
 
-    private List<User> getAllUsers(){
-        List<User> admins = new ArrayList<>(new AdminService().listAllUsers());
-        List<User> clients = new ArrayList<>(new ClientService().listAllUsers());
-        List<User> newList = new ArrayList<>();
-        newList.addAll(admins);
-        newList.addAll(clients);
-        return newList;
-    }
+
 }
