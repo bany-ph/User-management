@@ -29,8 +29,7 @@ public abstract class User {
     }
 
     public void setEmail(String email) {
-        ValidateInputs.validateEmail(email);
-        this.email = email;
+        this.email = ValidateInputs.validateEmail(email);;
     }
 
     public String getPassword() {
@@ -38,14 +37,14 @@ public abstract class User {
     }
 
     public void setPassword(String password) {
-        ValidateInputs.validatePassword(password);
-        this.password = password;
+        this.password = ValidateInputs.validatePassword(password);;
     }
     public void setStatus(){
         this.isActive = !this.isActive;
     }
-    public boolean getStatus(){
-        return this.isActive;
+    public String getStatus()
+    {
+        return isActive ? "ACTIVE" : "BLOCKED";
     }
 
 

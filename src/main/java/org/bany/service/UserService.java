@@ -1,5 +1,6 @@
 package org.bany.service;
 
+import org.bany.exception.NotAllowed;
 import org.bany.model.Administrador;
 import org.bany.model.User;
 import org.bany.utils.FindElements;
@@ -10,9 +11,13 @@ import java.util.NoSuchElementException;
 
 public class UserService implements UserInterface {
     private static List<User> users = new ArrayList<>();
-    private AuthService authService = new AuthService();
+    private AuthService authService;
 
 
+    public UserService(AuthService authService) {
+        users.add(new Administrador("bany", "bany@gmail.com", "bany123")); // default admin
+        this.authService = authService;
+    }
 
     @Override
     public void save(User user) {
@@ -49,26 +54,25 @@ public class UserService implements UserInterface {
     }
 
 
+    public void changeStatusOfAnClient(String userEmail){
+        User user = getUserByEmail(userEmail);
+        if (user == null) {
+            throw new NoSuchElementException("The user does not exist");
+        }
+        if(!isAdmin()){
+            throw new NotAllowed();
+        }
+        if(isAdmin(user)){ // if is admin then
+            throw new NotAllowed();
+        }
+        users.get(getIndexOfUser(user)).setStatus();
+    }
+
     private int getIndexOfUser(User user){
         return users.indexOf(user);
     }
 
-    private boolean isAdmin(){
-        return authService.getCurrentUser() instanceof Administrador;
-    }
-
-
-    /*FOR ADMIN*/
-    public void changeStatusOfAnClient(String userEmail){
-        User user = getUserByEmail(userEmail);
-        if(!isAdmin()){
-            throw new RuntimeException("You're not allowed to do this action");
-        }else if(user instanceof Administrador){
-            throw new RuntimeException("You're not allow to do this action");
-        } else if (user == null) {
-            throw new NoSuchElementException("The user does not exist");
-        }
-        users.get(getIndexOfUser(user)).setStatus();
-    }
+    private boolean isAdmin(){return authService.getCurrentUser() instanceof Administrador;} // current user
+    private boolean isAdmin(User user){return user instanceof Administrador;} // check if a specific user is admin
 
 }

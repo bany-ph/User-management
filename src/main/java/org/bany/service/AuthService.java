@@ -1,24 +1,25 @@
 package org.bany.service;
 
+import org.bany.exception.NotAllowed;
 import org.bany.model.User;
 import org.bany.security.Authentication;
 import org.bany.utils.FindElements;
 import org.bany.utils.ValidateInputs;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.NoSuchElementException;
+
 
 public class AuthService implements Authentication {
 
     private static User currentUser;
-    private final UserService userService;
+    private UserService userService;
 
-    private boolean isAuth;
+    private static boolean isAuth;
 
     public AuthService(){
-        userService = new UserService();
+        userService = new UserService(this);
         currentUser = null;
-        this.isAuth = false;
+        isAuth = false;
     }
 
     @Override
@@ -26,30 +27,37 @@ public class AuthService implements Authentication {
 
         User getUser = FindElements.findByString(userService.listAllUsers(),email,User::getEmail);
         if(getUser == null){
-            throw new RuntimeException("The User does not exist!");
+            throw new NoSuchElementException("The User does not exist!");
         }
         if(!getUser.getPassword().equals(password)){
-            throw new RuntimeException("Incorrect Password");
+            throw new IllegalArgumentException("Incorrect Password");
         }
 
-        this.isAuth = true;
+        if(getUser.getStatus().equals("BLOCKED")){
+            throw new NotAllowed("Your account it's blocked");
+        }
+
+        isAuth = true;
         currentUser = getUser;
 
         return true;
     }
 
     @Override
-    public boolean register(User newUser) {
+    public void register(User newUser) {
         ValidateInputs.validateEmail(newUser.getEmail());
         ValidateInputs.validatePassword(newUser.getPassword());
 
         User userExist = FindElements.findByString(userService.listAllUsers(),newUser.getEmail(), User::getEmail);
 
         if(userExist != null){
-            throw new RuntimeException("The User already exist");
+            throw new IllegalArgumentException("The User already exist");
         }
         userService.save(newUser);
-        return true;
+
+        isAuth = true;
+        currentUser = newUser;
+
     }
 
     @Override

@@ -1,61 +1,37 @@
 package org.bany.app;
 
+import org.bany.model.Administrador;
 import org.bany.model.Client;
+import org.bany.model.User;
 import org.bany.service.AuthService;
-import org.bany.service.UserService;
+
 
 public class Main {
     public static void main(String[] args) {
         AuthService authService = new AuthService();
+        ViewAdmin viewAdmin = new ViewAdmin(authService);
+        ViewAuth viewAuth = new ViewAuth(authService);
+        ViewClient viewClient = new ViewClient(authService);
 
         while(true) {
             try {
+                User currentUser = authService.getCurrentUser();
                 if (!authService.isAuth()) {
-                    showMainMenu();
-
-                } else if (authService.getCurrentUser() instanceof Client) {
-                    showClientMenu();
-
-                } else {
-                    ControllerAdmin controllerAdmin = new ControllerAdmin(authService);
-                    showAdminMenu();
+                    viewAuth.runAuthView();
+                } else if (currentUser instanceof Client) {
+                    viewClient.runClientView();
+                } else if ( currentUser instanceof Administrador) {
+                    viewAdmin.RunAdminView();
                 }
 
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                throw new RuntimeException(e);
             }
         }
     }
 
-    static void showMainMenu(){
-        System.out.println("""
-                        MAIN MENU
-                        
-                1. Login
-                2. Register
-                3. exit
-                """);
-    }
 
 
-    static  void showClientMenu(){
-        System.out.println("""
-                        MENU
-                        
-                1. Update data
-                2. Show Users
-                3. Logout
-                
-                """);
-    }
 
-    static  void showAdminMenu(){
-        System.out.println("""
-                    MENU
-                    
-                1. Block user/ unblock User     
-                2. Show users
-                3. logout
-                """);
-    }
+
 }

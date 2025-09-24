@@ -1,19 +1,15 @@
 package org.bany.model;
 
 public class Client extends User {
-    private String address;
-    private String phone;
-    public Client(String name, String email, String password, String address, String phone) {
-        super(name, email, password);
-        this.address = address;
-        this.phone = phone;
-    }
+    private String address = "";
+    private String phone = "";
+
     public Client(String name, String email, String password) {
         super(name, email, password);
     }
 
     public String getAddress() {
-        return address;
+        return !address.isEmpty() ? address : "NOT PROVIDED";
     }
 
     public void setAddress(String address) {
@@ -21,7 +17,7 @@ public class Client extends User {
     }
 
     public String getPhone() {
-        return phone;
+        return !phone.isEmpty() ? phone : "NOT PROVIDED " ;
     }
 
     public void setPhone(String phone) {
@@ -36,9 +32,15 @@ public class Client extends User {
     @Override
     public String showProfile() {
         return String.format("""
-                User name → %s
-                Email → %s
-                """, getName(),
-                getEmail());
+                
+                USER NAME → %s
+                EMAIL → %s
+                STATUS → %s
+                ROLE → %s
+                PHONE → %s
+                ADDRESS → %s
+                """, getName(), getEmail(),
+                getStatus(),getRole(),
+                getPhone(),getAddress());
     }
 }
