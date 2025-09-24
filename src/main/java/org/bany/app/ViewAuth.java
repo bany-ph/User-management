@@ -46,11 +46,13 @@ public class ViewAuth {
 
     private void showMenu(){
         System.out.println("""
+                        
                         MAIN MENU
                         
                 1. Login
                 2. Register
                 3. exit
+                
                 """);
     }
 

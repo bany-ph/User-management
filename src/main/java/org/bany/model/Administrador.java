@@ -13,6 +13,13 @@ public class Administrador extends User{
 
     @Override
     public String showProfile() {
-        return "";
+        return  String.format("""
+              
+                USER NAME → %s
+                EMAIL → %s
+                STATUS → %s
+                ROLE → %s
+                """, getName(), getEmail(),
+                getStatus(),getRole());
     }
 }
